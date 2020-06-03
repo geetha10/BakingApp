@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,7 +18,7 @@ import com.geetha.bakingapp.models.Recipe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecipesFragment extends Fragment {
+public class RecipesFragment extends Fragment implements RecipesAdapter.RecipeClickCallback {
     RecyclerView mRecipesRv;
     RecipesAdapter recipesAdapter;
     List <Recipe> mRecipesList = new ArrayList <> ();
@@ -42,7 +43,7 @@ public class RecipesFragment extends Fragment {
         recipesFragmentViewModel = new ViewModelProvider(this).get (RecipesFragmentViewModel.class);
 
         mRecipesRv = v.findViewById (R.id.recipies_recycler_view);
-        recipesAdapter = new RecipesAdapter (getContext (), mRecipesList);
+        recipesAdapter = new RecipesAdapter (getContext (), mRecipesList, this);
         mRecipesRv.setAdapter (recipesAdapter);
 
         recipesFragmentViewModel.getRecipesAsync ();
@@ -54,5 +55,12 @@ public class RecipesFragment extends Fragment {
         mRecipesList.clear ();
         mRecipesList.addAll (recipes);
         recipesAdapter.notifyDataSetChanged ();
+    }
+
+    @Override
+    public void onRecipeCardClicked(Recipe recipe) {
+        RecipeDetailsFragment recipeDetailsFragment=new RecipeDetailsFragment ();
+        FragmentTransaction fragmentTransaction=getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace (R.id.fragment_container,recipeDetailsFragment).commit ();
     }
 }

@@ -12,7 +12,7 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate (savedInstanceState);
         setContentView (R.layout.welcome_activity);
 
-        RecipesFragment rf=new RecipesFragment ();
-        getSupportFragmentManager ().beginTransaction ().add (R.id.fragment_container,rf).commit ();
+        RecipesFragment recipeFragment=new RecipesFragment ();
+        getSupportFragmentManager ().beginTransaction ().add (R.id.fragment_container,recipeFragment).commit ();
     }
 }
