@@ -65,7 +65,6 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.RecipeCl
     public void onRecipeCardClicked(Recipe recipe) {
         RecipeDetailsFragment recipeDetailsFragment=new RecipeDetailsFragment ();
         Bundle bundle= new Bundle ();
-       // List<Step> description=recipe.getSteps ();
         bundle.putParcelable ("RECIPE", Parcels.wrap (recipe));
         recipeDetailsFragment.setArguments (bundle);
         getActivity().getSupportFragmentManager().beginTransaction()

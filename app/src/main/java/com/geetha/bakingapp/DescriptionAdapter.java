@@ -1,5 +1,6 @@
 package com.geetha.bakingapp;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +8,8 @@ import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.geetha.bakingapp.models.Recipe;
 import com.geetha.bakingapp.models.Step;
 
 import java.util.List;
@@ -14,13 +17,20 @@ import java.util.List;
 
 public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.DescriptionViewHolder> {
 
-    private static final String TAG = "Description Adapter";
-
-    public DescriptionAdapter(List <Step> mStepsList) {
-        this.mStepsList = mStepsList;
+    public interface DescriptionClickCallback {
+        void onDescriptionButtonClicked(Step step);
     }
 
+    Context context;
     List <Step> mStepsList;
+
+    public DescriptionAdapter(Context context, List <Step> mStepsList, DescriptionClickCallback callback) {
+        this.context = context;
+        this.mStepsList = mStepsList;
+        this.callback = callback;
+    }
+
+    DescriptionClickCallback callback;
 
     @NonNull
     @Override
@@ -30,8 +40,14 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DescriptionViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull DescriptionViewHolder holder, final int position) {
         holder.mDescriptionBtn.setText ("Step "+ String.valueOf (position+1));
+        holder.mDescriptionBtn.setOnClickListener (new View.OnClickListener () {
+            @Override
+            public void onClick(View v) {
+                callback.onDescriptionButtonClicked (mStepsList.get (position));
+            }
+        });
     }
 
     @Override
