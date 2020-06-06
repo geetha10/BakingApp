@@ -68,6 +68,6 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.RecipeCl
         bundle.putParcelable ("RECIPE", Parcels.wrap (recipe));
         recipeDetailsFragment.setArguments (bundle);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace (R.id.fragment_container,recipeDetailsFragment).commit ();
+                .replace (R.id.fragment_container,recipeDetailsFragment).addToBackStack (null).commit ();
     }
 }

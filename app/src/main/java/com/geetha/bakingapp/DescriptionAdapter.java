@@ -18,7 +18,7 @@ import java.util.List;
 public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.DescriptionViewHolder> {
 
     public interface DescriptionClickCallback {
-        void onDescriptionButtonClicked(Step step);
+        void onDescriptionButtonClicked(List<Step> steps,int position);
     }
 
     Context context;
@@ -45,7 +45,7 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
         holder.mDescriptionBtn.setOnClickListener (new View.OnClickListener () {
             @Override
             public void onClick(View v) {
-                callback.onDescriptionButtonClicked (mStepsList.get (position));
+                callback.onDescriptionButtonClicked (mStepsList,position);
             }
         });
     }
