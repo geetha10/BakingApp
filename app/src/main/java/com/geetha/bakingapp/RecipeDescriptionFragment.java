@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -27,7 +28,7 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
-public class RecipeDescriptionFragment extends Fragment {
+public class RecipeDescriptionFragment extends Fragment implements View.OnClickListener {
 
     List <Step> steps;
     Step step;
@@ -47,12 +48,13 @@ public class RecipeDescriptionFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate (savedInstanceState);
-        steps = Parcels.unwrap (getArguments ().getParcelable ("STEP"));
         position=getArguments ().getInt ("POSITION");
+        steps = Parcels.unwrap (getArguments ().getParcelable ("STEPS"));
         step=steps.get (position);
-        setMediaPlayer ();
         appNameStringRes = R.string.app_name;
     }
+
+
 
     @Nullable
     @Override
@@ -62,27 +64,39 @@ public class RecipeDescriptionFragment extends Fragment {
         mDescriptionVideoView = view.findViewById (R.id.step_description_videoView);
         mDescriptionHeader = view.findViewById (R.id.step_description_header);
         mNextStepButton = view.findViewById (R.id.next_step_btn);
+        if(position == steps.size ()-1){
+            mNextStepButton.setVisibility (View.GONE);
+        }
+        populateUI (step);
+        return view;
+    }
+
+    private void populateUI(Step step) {
         if("".equals (url)){
             mDescriptionVideoView.setVisibility (View.GONE);
         }
         else {
-            TrackSelector trackSelectorDef = new DefaultTrackSelector ();
-            absPlayerInternal = ExoPlayerFactory.newSimpleInstance(getContext (), trackSelectorDef);
-            String userAgent = Util.getUserAgent(getContext (), this.getString(appNameStringRes));
-            DefaultDataSourceFactory defaultDataSourceFactory=new DefaultDataSourceFactory (getContext (),userAgent);
-            MediaSource mediaSource = new ProgressiveMediaSource.Factory(defaultDataSourceFactory).createMediaSource(videoUri);  // creating a media source
-
-            absPlayerInternal.prepare(mediaSource);
-            absPlayerInternal.setPlayWhenReady(false);
-            mDescriptionVideoView.setPlayer (absPlayerInternal);
+            setMediaPlayer ();
         }
         mDescriptionHeader.setText (step.getShortDescription ());
         mDescriptionTextView.setText (step.getDescription ());
-        return view;
+        mNextStepButton.setOnClickListener (this);
     }
 
-    void setMediaPlayer(){
 
+    private void setMediaPlayer() {
+        TrackSelector trackSelectorDef = new DefaultTrackSelector ();
+        absPlayerInternal = ExoPlayerFactory.newSimpleInstance(getContext (), trackSelectorDef);
+        String userAgent = Util.getUserAgent(getContext (), this.getString(appNameStringRes));
+        DefaultDataSourceFactory defaultDataSourceFactory=new DefaultDataSourceFactory (getContext (),userAgent);
+        MediaSource mediaSource = new ProgressiveMediaSource.Factory(defaultDataSourceFactory).createMediaSource(videoUri);  // creating a media source
+
+        absPlayerInternal.prepare(mediaSource);
+        absPlayerInternal.setPlayWhenReady(false);
+        mDescriptionVideoView.setPlayer (absPlayerInternal);
+    }
+
+   private void setUrl(){
         if(step.getVideoURL () != null){
             url=step.getVideoURL ();
         }
@@ -90,4 +104,22 @@ public class RecipeDescriptionFragment extends Fragment {
            url= step.getThumbnailURL ();
         videoUri = Uri.parse (step.getVideoURL ());
     }
+
+    @Override
+    public void onClick(View v) {
+        if(v.getId ()== R.id.next_step_btn){
+            if(position  < steps.size ()-1){
+               // mNextStepButton.setVisibility (View.GONE);
+           // }
+           // else{
+                position++;
+                step=steps.get (position);
+                setUrl ();
+                populateUI (step);
+            }
+
+        }
+    }
+
+
 }

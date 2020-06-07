@@ -49,7 +49,7 @@ public class RecipeDetailsFragment extends Fragment implements DescriptionAdapte
     public void onDescriptionButtonClicked(List <Step> step, int position) {
         RecipeDescriptionFragment recipeDescriptionFragment = new RecipeDescriptionFragment ();
         Bundle bundle = new Bundle ();
-        bundle.putParcelable ("STEP", Parcels.wrap (step));
+        bundle.putParcelable ("STEPS", Parcels.wrap (step));
         bundle.putInt ("POSITION",position);
         recipeDescriptionFragment.setArguments (bundle);
         getActivity ().getSupportFragmentManager ().beginTransaction ().
