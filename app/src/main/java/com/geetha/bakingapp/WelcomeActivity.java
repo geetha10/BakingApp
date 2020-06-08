@@ -1,8 +1,8 @@
 package com.geetha.bakingapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -12,7 +12,7 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate (savedInstanceState);
         setContentView (R.layout.welcome_activity);
 
-        RecipesFragment recipeFragment=new RecipesFragment ();
-        getSupportFragmentManager ().beginTransaction ().add (R.id.fragment_container,recipeFragment).commit ();
+        RecipesFragment recipeFragment = new RecipesFragment ();
+        getSupportFragmentManager ().beginTransaction ().add (R.id.fragment_container, recipeFragment).commit ();
     }
 }

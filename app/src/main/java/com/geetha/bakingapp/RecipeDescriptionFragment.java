@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -36,11 +35,10 @@ public class RecipeDescriptionFragment extends Fragment implements View.OnClickL
     TextView mDescriptionTextView;
     TextView mDescriptionHeader;
     Button mNextStepButton;
-    Uri videoUri;
     int appNameStringRes;
     SimpleExoPlayer absPlayerInternal;
     PlayerView mDescriptionVideoView;
-    String url;
+
 
     public RecipeDescriptionFragment() {
     }
@@ -48,78 +46,77 @@ public class RecipeDescriptionFragment extends Fragment implements View.OnClickL
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate (savedInstanceState);
-        position=getArguments ().getInt ("POSITION");
+        position = getArguments ().getInt ("POSITION");
         steps = Parcels.unwrap (getArguments ().getParcelable ("STEPS"));
-        step=steps.get (position);
+        step = steps.get (position);
         appNameStringRes = R.string.app_name;
     }
-
-
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate (R.layout.fragment_description, container, false);
+        return inflater.inflate (R.layout.fragment_description, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated (view, savedInstanceState);
         mDescriptionTextView = view.findViewById (R.id.step_description_textview);
         mDescriptionVideoView = view.findViewById (R.id.step_description_videoView);
         mDescriptionHeader = view.findViewById (R.id.step_description_header);
         mNextStepButton = view.findViewById (R.id.next_step_btn);
-        if(position == steps.size ()-1){
-            mNextStepButton.setVisibility (View.GONE);
-        }
+        mNextStepButton.setOnClickListener (this);
+
         populateUI (step);
-        return view;
     }
 
     private void populateUI(Step step) {
-        if("".equals (url)){
+        String videoUrl = getVideoUrl ();
+        if ("".equals (videoUrl)) {
             mDescriptionVideoView.setVisibility (View.GONE);
-        }
-        else {
-            setMediaPlayer ();
+        } else {
+            mDescriptionVideoView.setVisibility (View.VISIBLE);
+            setMediaPlayer (videoUrl);
         }
         mDescriptionHeader.setText (step.getShortDescription ());
         mDescriptionTextView.setText (step.getDescription ());
-        mNextStepButton.setOnClickListener (this);
+        if (position == steps.size () - 1) {
+            mNextStepButton.setVisibility (View.GONE);
+        }
     }
 
 
-    private void setMediaPlayer() {
+    private void setMediaPlayer(String videoUrl) {
         TrackSelector trackSelectorDef = new DefaultTrackSelector ();
-        absPlayerInternal = ExoPlayerFactory.newSimpleInstance(getContext (), trackSelectorDef);
-        String userAgent = Util.getUserAgent(getContext (), this.getString(appNameStringRes));
-        DefaultDataSourceFactory defaultDataSourceFactory=new DefaultDataSourceFactory (getContext (),userAgent);
-        MediaSource mediaSource = new ProgressiveMediaSource.Factory(defaultDataSourceFactory).createMediaSource(videoUri);  // creating a media source
+        absPlayerInternal = ExoPlayerFactory.newSimpleInstance (getContext (), trackSelectorDef);
+        String userAgent = Util.getUserAgent (getContext (), this.getString (appNameStringRes));
+        DefaultDataSourceFactory defaultDataSourceFactory = new DefaultDataSourceFactory (getContext (), userAgent);
+        MediaSource mediaSource = new ProgressiveMediaSource.Factory (defaultDataSourceFactory)
+                .createMediaSource (Uri.parse (videoUrl));  // creating a media source
 
-        absPlayerInternal.prepare(mediaSource);
-        absPlayerInternal.setPlayWhenReady(false);
+        absPlayerInternal.prepare (mediaSource);
+        absPlayerInternal.setPlayWhenReady (false);
         mDescriptionVideoView.setPlayer (absPlayerInternal);
     }
 
-   private void setUrl(){
-        if(step.getVideoURL () != null){
-            url=step.getVideoURL ();
+    private String getVideoUrl() {
+        String videoUrl = "";
+        if (step.getVideoURL () != null) {
+            videoUrl = step.getVideoURL ();
+        } else {
+            videoUrl = step.getThumbnailURL ();
         }
-        else
-           url= step.getThumbnailURL ();
-        videoUri = Uri.parse (step.getVideoURL ());
+        return videoUrl;
     }
 
     @Override
     public void onClick(View v) {
-        if(v.getId ()== R.id.next_step_btn){
-            if(position  < steps.size ()-1){
-               // mNextStepButton.setVisibility (View.GONE);
-           // }
-           // else{
+        if (v.getId () == R.id.next_step_btn) {
+            if (position < steps.size () - 1) {
                 position++;
-                step=steps.get (position);
-                setUrl ();
+                step = steps.get (position);
                 populateUI (step);
             }
-
         }
     }
-
-
 }
