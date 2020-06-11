@@ -14,11 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.geetha.bakingapp.models.Recipe;
-import com.geetha.bakingapp.models.Step;
-
 import org.parceler.Parcels;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
