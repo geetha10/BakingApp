@@ -25,6 +25,7 @@ public class RecipeDetailsFragment extends Fragment implements DescriptionAdapte
     DescriptionAdapter descriptionAdapter;
     RecyclerView mIngredientsRV;
     IngredientsAdapter ingredientsAdapter;
+
     public RecipeDetailsFragment() {
     }
 
