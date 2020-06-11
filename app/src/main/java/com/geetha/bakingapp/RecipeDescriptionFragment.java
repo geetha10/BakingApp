@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.geetha.bakingapp.models.Recipe;
 import com.geetha.bakingapp.models.Step;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -33,7 +32,6 @@ import java.util.List;
 public class RecipeDescriptionFragment extends Fragment implements View.OnClickListener {
 
     List <Step> steps;
-    Step step;
     int position;
     TextView mDescriptionTextView;
     TextView mDescriptionHeader;
@@ -41,27 +39,23 @@ public class RecipeDescriptionFragment extends Fragment implements View.OnClickL
     int appNameStringRes;
     SimpleExoPlayer absPlayerInternal;
     PlayerView mDescriptionVideoView;
-    private RecipeDescriptionViewModel recipeDescriptionViewModel;
-
-
-    public RecipeDescriptionFragment() {
-    }
 
     Observer <Step> recipeStepObserver = new Observer <Step> () {
         @Override
         public void onChanged(Step step) {
-            onStepChanged (step);
+            populateUI (step);
         }
     };
+
+    private RecipeDescriptionViewModel recipeDescriptionViewModel;
+
+    public RecipeDescriptionFragment() {}
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate (savedInstanceState);
         position = getArguments ().getInt ("POSITION");
         steps = Parcels.unwrap (getArguments ().getParcelable ("STEPS"));
-        step=steps.get (position);
-        recipeDescriptionViewModel=new ViewModelProvider (this).get(RecipeDescriptionViewModel.class);
-        recipeDescriptionViewModel.getRecipe (step);
         appNameStringRes = R.string.app_name;
     }
 
@@ -74,17 +68,27 @@ public class RecipeDescriptionFragment extends Fragment implements View.OnClickL
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated (view, savedInstanceState);
-        recipeDescriptionViewModel.recipeDesLiveData.observe (getViewLifecycleOwner(),recipeStepObserver);
         mDescriptionTextView = view.findViewById (R.id.step_description_textview);
         mDescriptionVideoView = view.findViewById (R.id.step_description_videoView);
         mDescriptionHeader = view.findViewById (R.id.step_description_header);
         mNextStepButton = view.findViewById (R.id.next_step_btn);
         mNextStepButton.setOnClickListener (this);
-      //  populateUI (step);
+
+        ViewModelProvider.Factory factory = new RecipeDescriptionViewModelFactory (steps, position);
+        recipeDescriptionViewModel = new ViewModelProvider (this, factory)
+                .get (RecipeDescriptionViewModel.class);
+        recipeDescriptionViewModel.recipeDesLiveData.observe (getViewLifecycleOwner (), recipeStepObserver);
+
+        recipeDescriptionViewModel.nextVisibleLiveData.observe (getViewLifecycleOwner (), new Observer <Boolean> () {
+            @Override
+            public void onChanged(Boolean visible) {
+                mNextStepButton.setVisibility (!visible ? View.GONE : View.VISIBLE);
+            }
+        });
     }
 
     private void populateUI(Step step) {
-        String videoUrl = getVideoUrl ();
+        String videoUrl = recipeDescriptionViewModel.getVideoUrl (step);
         if ("".equals (videoUrl)) {
             mDescriptionVideoView.setVisibility (View.GONE);
         } else {
@@ -93,11 +97,7 @@ public class RecipeDescriptionFragment extends Fragment implements View.OnClickL
         }
         mDescriptionHeader.setText (step.getShortDescription ());
         mDescriptionTextView.setText (step.getDescription ());
-        if (position == steps.size () - 1) {
-            mNextStepButton.setVisibility (View.GONE);
-        }
     }
-
 
     private void setMediaPlayer(String videoUrl) {
         TrackSelector trackSelectorDef = new DefaultTrackSelector ();
@@ -112,28 +112,10 @@ public class RecipeDescriptionFragment extends Fragment implements View.OnClickL
         mDescriptionVideoView.setPlayer (absPlayerInternal);
     }
 
-    private String getVideoUrl() {
-        String videoUrl = "";
-        if (step.getVideoURL () != null) {
-            videoUrl = step.getVideoURL ();
-        } else {
-            videoUrl = step.getThumbnailURL ();
-        }
-        return videoUrl;
-    }
-
     @Override
     public void onClick(View v) {
         if (v.getId () == R.id.next_step_btn) {
-            if (position < steps.size () - 1) {
-                position++;
-                step = steps.get (position);
-                populateUI (step);
-            }
+            recipeDescriptionViewModel.onNextClicked ();
         }
-    }
-
-    void onStepChanged(Step step) {
-        populateUI (step);
     }
 }
