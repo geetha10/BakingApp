@@ -18,7 +18,6 @@ public class RecipeDetailsViewModel extends ViewModel {
     private MutableLiveData <Recipe> _recipesLiveData = new MutableLiveData <> ();
     LiveData <Recipe> recipeLiveData = _recipesLiveData;
 
-
     void getRecipe(Recipe recipe) {
         _recipesLiveData.setValue (recipe);
     }

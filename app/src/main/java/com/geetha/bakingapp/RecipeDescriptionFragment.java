@@ -11,7 +11,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.geetha.bakingapp.models.Recipe;
 import com.geetha.bakingapp.models.Step;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -38,17 +41,27 @@ public class RecipeDescriptionFragment extends Fragment implements View.OnClickL
     int appNameStringRes;
     SimpleExoPlayer absPlayerInternal;
     PlayerView mDescriptionVideoView;
+    private RecipeDescriptionViewModel recipeDescriptionViewModel;
 
 
     public RecipeDescriptionFragment() {
     }
+
+    Observer <Step> recipeStepObserver = new Observer <Step> () {
+        @Override
+        public void onChanged(Step step) {
+            onStepChanged (step);
+        }
+    };
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate (savedInstanceState);
         position = getArguments ().getInt ("POSITION");
         steps = Parcels.unwrap (getArguments ().getParcelable ("STEPS"));
-        step = steps.get (position);
+        step=steps.get (position);
+        recipeDescriptionViewModel=new ViewModelProvider (this).get(RecipeDescriptionViewModel.class);
+        recipeDescriptionViewModel.getRecipe (step);
         appNameStringRes = R.string.app_name;
     }
 
@@ -61,13 +74,13 @@ public class RecipeDescriptionFragment extends Fragment implements View.OnClickL
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated (view, savedInstanceState);
+        recipeDescriptionViewModel.recipeDesLiveData.observe (getViewLifecycleOwner(),recipeStepObserver);
         mDescriptionTextView = view.findViewById (R.id.step_description_textview);
         mDescriptionVideoView = view.findViewById (R.id.step_description_videoView);
         mDescriptionHeader = view.findViewById (R.id.step_description_header);
         mNextStepButton = view.findViewById (R.id.next_step_btn);
         mNextStepButton.setOnClickListener (this);
-
-        populateUI (step);
+      //  populateUI (step);
     }
 
     private void populateUI(Step step) {
@@ -118,5 +131,9 @@ public class RecipeDescriptionFragment extends Fragment implements View.OnClickL
                 populateUI (step);
             }
         }
+    }
+
+    void onStepChanged(Step step) {
+        populateUI (step);
     }
 }
