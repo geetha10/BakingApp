@@ -19,7 +19,7 @@
     <style name="DetailsFragmentHeader">
         <item name="android:textAlignment">center</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Display3</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@android:color/white </item>
         <item name="android:textSize">36sp</item>
     </style>
 
