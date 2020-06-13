@@ -1,4 +1,4 @@
-package com.geetha.bakingapp;
+package com.geetha.bakingapp.ui.details;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,7 +9,7 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.geetha.bakingapp.models.Recipe;
+import com.geetha.bakingapp.R;
 import com.geetha.bakingapp.models.Step;
 
 import java.util.List;
@@ -41,7 +41,7 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull DescriptionViewHolder holder, final int position) {
-        holder.mDescriptionBtn.setText ("Step "+ String.valueOf (position+1));
+        holder.mDescriptionBtn.setText ("Step "+ (position + 1));
         holder.mDescriptionBtn.setOnClickListener (new View.OnClickListener () {
             @Override
             public void onClick(View v) {

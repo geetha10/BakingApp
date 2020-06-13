@@ -1,4 +1,4 @@
-package com.geetha.bakingapp;
+package com.geetha.bakingapp.ui.description;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,7 +14,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.geetha.bakingapp.R;
 import com.geetha.bakingapp.models.Step;
+import com.geetha.bakingapp.ui.description.RecipeDescriptionViewModel;
+import com.geetha.bakingapp.ui.description.RecipeDescriptionViewModelFactory;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.MediaSource;
@@ -33,9 +36,11 @@ public class RecipeDescriptionFragment extends Fragment implements View.OnClickL
 
     List <Step> steps;
     int position;
+
     TextView mDescriptionTextView;
     TextView mDescriptionHeader;
     Button mNextStepButton;
+
     int appNameStringRes;
     SimpleExoPlayer absPlayerInternal;
     PlayerView mDescriptionVideoView;

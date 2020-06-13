@@ -1,4 +1,4 @@
-package com.geetha.bakingapp;
+package com.geetha.bakingapp.ui.description;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;

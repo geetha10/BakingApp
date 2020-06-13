@@ -1,4 +1,4 @@
-package com.geetha.bakingapp;
+package com.geetha.bakingapp.ui.details;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.geetha.bakingapp.R;
 import com.geetha.bakingapp.models.Ingredient;
 
 import java.util.List;

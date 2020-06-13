@@ -1,7 +1,7 @@
-package com.geetha.bakingapp;
+package com.geetha.bakingapp.ui.details;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +13,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.geetha.bakingapp.R;
+import com.geetha.bakingapp.ui.activities.RecipeActivity;
 import com.geetha.bakingapp.models.Recipe;
 import org.parceler.Parcels;
 import java.util.ArrayList;
@@ -59,11 +61,8 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.RecipeCl
 
     @Override
     public void onRecipeCardClicked(Recipe recipe) {
-        RecipeDetailsFragment recipeDetailsFragment=new RecipeDetailsFragment ();
-        Bundle bundle= new Bundle ();
-        bundle.putParcelable ("RECIPE", Parcels.wrap (recipe));
-        recipeDetailsFragment.setArguments (bundle);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace (R.id.fragment_container,recipeDetailsFragment).addToBackStack (null).commit ();
+        Intent recipeIntent=new Intent (getContext (), RecipeActivity.class);
+        recipeIntent.putExtra ("RECIPE",Parcels.wrap (recipe));
+        startActivity (recipeIntent);
     }
 }

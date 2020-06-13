@@ -1,4 +1,4 @@
-package com.geetha.bakingapp;
+package com.geetha.bakingapp.ui.details;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,12 +8,12 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.geetha.bakingapp.R;
 import com.geetha.bakingapp.models.Recipe;
 import com.geetha.bakingapp.models.Step;
+import com.geetha.bakingapp.ui.description.RecipeDescriptionFragment;
 
 import org.parceler.Parcels;
 
@@ -27,6 +27,7 @@ public class RecipeDetailsFragment extends Fragment implements DescriptionAdapte
     DescriptionAdapter descriptionAdapter;
     RecyclerView mIngredientsRV;
     IngredientsAdapter ingredientsAdapter;
+    boolean mTwoPane;
 
     public RecipeDetailsFragment() { }
 
@@ -34,6 +35,7 @@ public class RecipeDetailsFragment extends Fragment implements DescriptionAdapte
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate (savedInstanceState);
         mRecipe = Parcels.unwrap (getArguments ().getParcelable ("RECIPE"));
+        mTwoPane = getArguments ().getBoolean ("TWO_PANE");
     }
 
     @Nullable
@@ -55,14 +57,25 @@ public class RecipeDetailsFragment extends Fragment implements DescriptionAdapte
     }
 
     @Override
-    public void onDescriptionButtonClicked(List <Step> step, int position) {
+    public void onDescriptionButtonClicked(List <Step> steps, int position) {
         RecipeDescriptionFragment recipeDescriptionFragment = new RecipeDescriptionFragment ();
         Bundle bundle = new Bundle ();
-        bundle.putParcelable ("STEPS", Parcels.wrap (step));
+        bundle.putParcelable ("STEPS", Parcels.wrap (steps));
         bundle.putInt ("POSITION", position);
         recipeDescriptionFragment.setArguments (bundle);
-        getActivity ().getSupportFragmentManager ().beginTransaction ().
-                replace (R.id.fragment_container, recipeDescriptionFragment).addToBackStack (null).commit ();
+
+        if (mTwoPane) {
+            getActivity ().getSupportFragmentManager ()
+                    .beginTransaction ()
+                    .replace (R.id.recipe_detail_container, recipeDescriptionFragment)
+                    .commit ();
+        } else {
+            getActivity ().getSupportFragmentManager ()
+                    .beginTransaction ()
+                    .replace (R.id.recipes_container, recipeDescriptionFragment)
+                    .addToBackStack (null)
+                    .commit ();
+        }
     }
 
 }

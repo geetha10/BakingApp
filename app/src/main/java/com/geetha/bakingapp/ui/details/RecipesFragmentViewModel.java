@@ -1,4 +1,4 @@
-package com.geetha.bakingapp;
+package com.geetha.bakingapp.ui.details;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
