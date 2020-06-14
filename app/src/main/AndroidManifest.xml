@@ -11,11 +11,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <receiver android:name=".ui.widget.BakingAppWidget">
+        <activity
+            android:name=".ui.widget.WidgetConfigureActivity"
+            android:label="@string/title_activity_widget_configure">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
+        <receiver android:name=".ui.widget.BakingAppWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
-
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/baking_app_widget_info" />
@@ -29,10 +35,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+        <service android:name=".ui.widget.ListViewWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+
     </application>
 
 </manifest>

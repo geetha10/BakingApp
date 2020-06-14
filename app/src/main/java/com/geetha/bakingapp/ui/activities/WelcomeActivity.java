@@ -5,7 +5,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.geetha.bakingapp.R;
-import com.geetha.bakingapp.ui.details.RecipesFragment;
+import com.geetha.bakingapp.ui.recipes.RecipesFragment;
 
 public class WelcomeActivity extends AppCompatActivity {
 

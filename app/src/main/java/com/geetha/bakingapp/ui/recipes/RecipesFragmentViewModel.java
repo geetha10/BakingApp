@@ -1,4 +1,4 @@
-package com.geetha.bakingapp.ui.details;
+package com.geetha.bakingapp.ui.recipes;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel;
 
 import com.geetha.bakingapp.models.Recipe;
 import com.geetha.bakingapp.network.RetrofitInstance;
-
 import java.util.List;
 
 import retrofit2.Call;

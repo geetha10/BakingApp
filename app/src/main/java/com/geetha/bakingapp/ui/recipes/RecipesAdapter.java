@@ -1,4 +1,4 @@
-package com.geetha.bakingapp.ui.details;
+package com.geetha.bakingapp.ui.recipes;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -43,12 +43,18 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesV
 
     @Override
     public void onBindViewHolder(@NonNull RecipesViewHolder holder, final int position) {
-        Glide.with (context).load (mRecipeList.get (position).getImage ()).into (holder.mRecipeImg);
-        holder.mRecipeName.setText (mRecipeList.get (position).getName ());
+        Recipe recipe = mRecipeList.get (position);
+        if ("".equals (recipe.getImage ())) {
+            Glide.with (context).load (getImageRes (recipe.getId ())).into (holder.mRecipeImg);
+        } else {
+            Glide.with (context).load (mRecipeList.get (position).getImage ()).into (holder.mRecipeImg);
+        }
+
+        holder.mRecipeName.setText (recipe.getName ());
         holder.mRecipeCard.setOnClickListener (new View.OnClickListener () {
             @Override
             public void onClick(View v) {
-                callback.onRecipeCardClicked (mRecipeList.get (position));
+                callback.onRecipeCardClicked (recipe);
             }
         });
     }
@@ -56,6 +62,21 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesV
     @Override
     public int getItemCount() {
         return mRecipeList.size ();
+    }
+
+    private int getImageRes(int recipeId){
+        switch (recipeId){
+            case 1:
+                return R.drawable.nutella_pie;
+            case 2:
+                return R.drawable.brownies;
+            case 3:
+                return R.drawable.yellow_cake;
+            case 4:
+                return R.drawable.cheesecake;
+            default:
+                return R.drawable.gujiyaa;
+        }
     }
 
     static class RecipesViewHolder extends RecyclerView.ViewHolder{
